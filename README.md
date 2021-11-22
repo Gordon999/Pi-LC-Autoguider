@@ -1,1 +1,22 @@
 # Pi-LC-Autoguider
+
+This script was developed using # libcamera to auto guide a telescope through a ST-4 port using a Raspberry Pi (Pi2B/Pi3B/Pi3B+/Pi4 recommended) and a suitable interface.
+
+The interface can be an opto-isolator, relay card available for the Pi, eg Seeed Raspberry PI card, PiFace Relay Plus card, Sainsmart USB 4 relay card or any 4 relay card you interface.
+
+The relay cards can also be modified, different wiring to scope, to auto-guide other scopes eg Meade LX-10.
+
+It can also be interfaced to scopes via an Arduino Uno, via USB. The Arduino Uno can also be controlled by a PC using software such as PHD. Details can be found under the Arduino-Uno-AutoGuider repository.
+
+The Pi can also control a Canon DSLR, via an interface, to allow long exposure photographs.
+
+Sony A6000* can also be used for long exposure photographs and controlled by 3 methods...
+
+*Note although A6000 is tested I have also tested on a A7R4 so should work on several Sony models. Note you can't use the Electronic shutter with BULB.
+
+If you want to try your camera download my https://github.com/Gordon999/Pi-Sony-A6000-remote and try them. Connect an IR led to gpio pin number 36.
+
+Modifying Sony RM-SPR1 remote button (See Sony.txt and related photos) with extra FOCUS control gpio added (pin 23).
+Use of Infra Red diode to a gpio and Sony RMT-VP1 receiver..
+Use of Infra Red diode to a gpio directly to camera (limited camera battery life !!)
+Please take care when interfacing your telescope or camera. At your own risk.
