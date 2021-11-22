@@ -1,6 +1,24 @@
-# Pi-LC-Autoguider
+# Pi-LC-Autoguider, in BETA
 
 This script was developed using # libcamera to auto guide a telescope through a ST-4 port using a Raspberry Pi (Pi2B/Pi3B/Pi3B+/Pi4 recommended) and a suitable interface.
+
+Requires opencv installed sudo apt-get install python3-opencv
+
+To install:
+
+Install latest RaspiOS based on Bullseye (tested with FULL 32bit version)
+
+then...
+
+sudo apt install libsdl2-ttf-2.0-0
+
+python3 -m pip install -U pygame --user
+
+sudo apt install libsdl-gfx1.2-5 libsdl-image1.2 libsdl-kitchensink1 libsdl-mixer1.2 libsdl-sound1.2 libsdl-ttf2.0-0 libsdl1.2debian libsdl2-2.0-0 libsdl2-gfx-1.0-0 libsdl2-image-2.0-0 libsdl2-mixer-2.0-0 libsdl2-ttf-2.0-0
+
+sudo apt install python3-opencv
+
+Download PiLCAG.py and copy to /home/pi
 
 The interface can be an opto-isolator, relay card available for the Pi, eg Seeed Raspberry PI card, PiFace Relay Plus card, Sainsmart USB 4 relay card or any 4 relay card you interface.
 
