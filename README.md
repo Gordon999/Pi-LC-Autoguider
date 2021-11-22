@@ -5,6 +5,10 @@
 
 This script was developed using # libcamera to auto guide a telescope through a ST-4 port using a Raspberry Pi (Pi2B/Pi3B/Pi3B+/Pi4 recommended) and a suitable interface. For interface details etc see https://github.com/Gordon999/Pi-AutoGuider
 
+## Screenshot
+
+![screenshot](screen.jpg)
+
 Requires opencv installed sudo apt-get install python3-opencv
 
 To install:
