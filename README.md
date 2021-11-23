@@ -21,13 +21,13 @@ python3 -m pip install -U pygame --user
 
 sudo apt install libsdl-gfx1.2-5 libsdl-image1.2 libsdl-kitchensink1 libsdl-mixer1.2 libsdl-sound1.2 libsdl-ttf2.0-0 libsdl1.2debian libsdl2-2.0-0 libsdl2-gfx-1.0-0 libsdl2-image-2.0-0 libsdl2-mixer-2.0-0 libsdl2-ttf-2.0-0
 
-Download PiLCAG.py and copy to /home/pi and run it
+Download PiLCAG.py, copy to /home/pi and run it
 
 The interface can be an opto-isolator, relay card available for the Pi, eg Seeed Raspberry PI card, PiFace Relay Plus card, Sainsmart USB 4 relay card or any 4 relay card you interface.
 
 The relay cards can also be modified, different wiring to scope, to auto-guide other scopes eg Meade LX-10.
 
-It can also be interfaced to scopes via an Arduino Uno, via USB. The Arduino Uno can also be controlled by a PC using software such as PHD. Details can be found under the Arduino-Uno-AutoGuider repository.
+It can also be interfaced to scopes via an Arduino Uno or Pi Pico, via USB. The Arduino Uno or Pi Pico can also be controlled by a PC using software such as PHD. Details can be found under the Arduino-Uno-AutoGuider repository.
 
 The Pi can also control a Canon DSLR, via an interface, to allow long exposure photographs.
 
