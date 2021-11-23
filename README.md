@@ -27,7 +27,7 @@ The interface can be an opto-isolator, relay card available for the Pi, eg Seeed
 
 The relay cards can also be modified, different wiring to scope, to auto-guide other scopes eg Meade LX-10.
 
-It can also be interfaced to scopes via an Arduino Uno or Pi Pico, via USB. The Arduino Uno or Pi Pico can also be controlled by a PC using software such as PHD. Details can be found under the Arduino-Uno-AutoGuider repository.
+It can also be interfaced to scopes via an Arduino Uno or Pi Pico, via USB. The Arduino Uno or Pi Pico can also be controlled by a PC using software such as PHD. Details can be found under the Arduino-Uno-AutoGuider repository or https://github.com/Gordon999/RPi-Pico-Autoguider
 
 The Pi can also control a Canon DSLR, via an interface, to allow long exposure photographs.
 
