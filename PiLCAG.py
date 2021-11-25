@@ -152,7 +152,7 @@ rpired       =      100 # red gain
 rpiblue      =      130 # blue gain
 rpineg       =        0 # negative image
 awb = 0
-segment = 10
+segment = 1
 
 # USB common Webcam presets
 #===================================================================================
