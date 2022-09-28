@@ -11,7 +11,7 @@ This script was developed using a Raspberry PI with libcamera to auto guide a te
 
 To install:
 
-Install latest RaspiOS based on Bullseye (tested with FULL 32bit version)
+Install latest RaspiOS based on Bullseye (tested with FULL 32bit and 64bit versions)
 
 then...
 
