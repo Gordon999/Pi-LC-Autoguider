@@ -1,6 +1,6 @@
 # Pi-LC-Autoguider
 
-To work with RaspiOS based on BULLSEYE, using libcamera (NOT raspistill/raspivid).
+To work with RaspiOS based on BULLSEYE or BOOKWORM, using libcamera (NOT raspistill/raspivid).
 At your own risk !!. Ensure you have any required software backed up.
 
 This script was developed using a Raspberry PI with libcamera to auto guide a telescope through a ST-4 port using a Raspberry Pi (Pi2B/Pi3B/Pi3B+/Pi4 recommended) and a suitable interface. For interface details etc see https://github.com/Gordon999/Pi-AutoGuider
@@ -15,11 +15,10 @@ Install latest RaspiOS based on Bullseye (tested with FULL 32bit and 64bit versi
 
 then...
 
-sudo apt install libsdl2-ttf-2.0-0
+for BUSTER & BULLSEYE but NOT BOOKWORM - python3 -m pip install -U pygame --user and sudo apt install libsdl2-ttf-2.0
+and... sudo apt install libsdl-gfx1.2-5 libsdl-image1.2 libsdl-kitchensink1 libsdl-mixer1.2 libsdl-sound1.2 libsdl-ttf2.0-0 libsdl1.2debian libsdl2-2.0-0 libsdl2-gfx-1.0-0 libsdl2-image-2.0-0 libsdl2-mixer-2.0-0 libsdl2-ttf-2.0-0
 
-python3 -m pip install -U pygame --user
-
-sudo apt install libsdl-gfx1.2-5 libsdl-image1.2 libsdl-kitchensink1 libsdl-mixer1.2 libsdl-sound1.2 libsdl-ttf2.0-0 libsdl1.2debian libsdl2-2.0-0 libsdl2-gfx-1.0-0 libsdl2-image-2.0-0 libsdl2-mixer-2.0-0 libsdl2-ttf-2.0-0
+then...
 
 Download PiLCAG.py, copy to /home/pi and run it
 
