@@ -18,7 +18,7 @@ then...
 for BUSTER & BULLSEYE but NOT BOOKWORM - python3 -m pip install -U pygame --user and sudo apt install libsdl2-ttf-2.0
 and... sudo apt install libsdl-gfx1.2-5 libsdl-image1.2 libsdl-kitchensink1 libsdl-mixer1.2 libsdl-sound1.2 libsdl-ttf2.0-0 libsdl1.2debian libsdl2-2.0-0 libsdl2-gfx-1.0-0 libsdl2-image-2.0-0 libsdl2-mixer-2.0-0 libsdl2-ttf-2.0-0
 
-then...
+then... if using BOOKWORM switch to X11, sudo raspi-config, advanced, option A6 and choose X11, reboot.
 
 Download PiLCAG.py, copy to /home/pi and run it
 
