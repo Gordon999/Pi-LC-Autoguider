@@ -32,13 +32,11 @@ import signal
 from decimal import *
 getcontext().prec = 8
 
-#Pi-LC-Autoguider v6
+#Pi-LC-AutoGuider v7.00
 
 #WORKS WITH PYTHON 3 
 
 # If you want to run at boot using Buster: Assuming you've saved it as /home/pi/PiLCAG.py
-# Add @sudo /usr/bin/python3 /home/pi/PiLCAG.py to the end of /etc/xdg/lxsession/LXDE-pi/autostart
-# Make the file executable with sudo chmod +x PiLCAG.py
 
 #=============================================================================================================
 use_config  =         0 # set pre-stored config to load at startup, 1, 2 or 3. 
@@ -99,18 +97,18 @@ auto_rotate  =        0 # set to automatically rotate image after calibration
 
 #SETUP GPIO 
 #===================================================================================
-#Telescope control GPIO 'physical/BOARD' pins
-N_OP         =       22 # 22
-S_OP         =       18 # 18
-E_OP         =       24 # 24
-W_OP         =       16 # 16
+#Telescope control GPIO BCM pins
+N_OP         =       25 # 22
+S_OP         =       24 # 18
+E_OP         =       8  # 24
+W_OP         =       23 # 16
 # External camera control GPIO pin, eg DSLR
-C_OP         =       26 # 26 camera shutter
-F_OP         =       23 # 23 camera focus
+C_OP         =       7  # 26 camera shutter
+F_OP         =       11 # 23 camera focus
 # Alternative camera control GPIO pin if C_OP = 26 and using SPI for PiFace
-AC_OP        =       13 # 13
+AC_OP        =       27 # 13
 # IR led pin for Sony IR
-SI_OP        =       36 # 36
+SI_OP        =       16 # 36
 
 #==================================================================================================
 # SET DEFAULT VALUES
@@ -257,8 +255,8 @@ if not use_Pi_Cam and camera_connected:
    rpibluex = blue_balance
 
 # find user
-h_user  = glob.glob("/home/*")
-m_user  = glob.glob("/media/*")
+h_user = "/home/" + os.getlogin( )
+m_user = "/media/" + os.getlogin( )
    
 # Check for Pi Camera version
 if use_Pi_Cam and camera_connected:
@@ -301,11 +299,11 @@ if Cwindow and not os.path.exists(h_user[0] + '/CMask.bmp'):
    windowSurfaceObj = pygame.display.set_mode((mwidth, mheight), pygame.NOFRAME, 24)
    pygame.draw.circle(windowSurfaceObj, bredColor, (int(mcrop/2),int(mcrop/2)), int(mcrop/2),0)
    pygame.display.update()
-   pygame.image.save(windowSurfaceObj, h_user[0] + '/CMask.bmp')
+   pygame.image.save(windowSurfaceObj, h_user + '/CMask.bmp')
    pygame.display.quit()
    
 def MaskChange(): # used for circular window
-   mask = pygame.image.load(h_user[0] + '/CMask.bmp')
+   mask = pygame.image.load(h_user + '/CMask.bmp')
    smask = pygame.transform.scale(mask, [crop, crop])
    imm = pygame.image.tostring(smask, "RGB", 1)
    if sys.version_info[0] == 3:
@@ -429,7 +427,7 @@ if use_PiFaceRP:
    # switch OFF GPIO outputs as conflicts with SPI connections
    use_RPiGPIO = 0
    # Change to alternative DSLR camera control pin O/P as pin 26 conflicts with SPI connections
-   if C_OP == 26:
+   if C_OP == 7:
       C_OP = AC_OP
    import pifacerelayplus
    pfr = pifacerelayplus.PiFaceRelayPlus(pifacerelayplus.RELAY)
@@ -437,28 +435,26 @@ if use_PiFaceRP:
 # GPIO
 #===================================================================================
 if use_RPiGPIO:
-   import RPi.GPIO as GPIO
-   GPIO.setwarnings(False)
-   GPIO.setmode(GPIO.BOARD)
-   GPIO.setup(N_OP, GPIO.OUT)
-   GPIO.setup(S_OP, GPIO.OUT)
-   GPIO.setup(E_OP, GPIO.OUT)
-   GPIO.setup(W_OP, GPIO.OUT)
+   from gpiozero import LED
+   led_N_OP = LED(N_OP)
+   led_S_OP = LED(S_OP)
+   led_E_OP = LED(E_OP)
+   led_W_OP = LED(W_OP)
+
 if photoon:
    if not use_RPiGPIO:
-      import RPi.GPIO as GPIO
-      GPIO.setwarnings(False)
-      GPIO.setmode(GPIO.BOARD)
-   GPIO.setup(C_OP, GPIO.OUT)
-   GPIO.output(C_OP, GPIO.LOW)
-   GPIO.setup(F_OP, GPIO.OUT)
-   GPIO.output(F_OP, GPIO.LOW)
+      from gpiozero import LED
+   led_C_OP  = LED(C_OP)
+   led_F_OP  = LED(F_OP)
+   led_C_OP.off()
+   led_F_OP.off()
+
    po = 0
    # use Sony IR control
    if use_sony_ir > 0:
-      GPIO.setup(SI_OP,GPIO.OUT)
-      psi = GPIO.PWM(SI_OP, 40000)
-      psi.start(0)
+       from gpiozero import PWMOutputDevice
+       PWM_SI_OP = PWMOutputDevice(SI_OP, initial_value=0,frequency=40000)
+
       
 #==============================================================================
 #a_thr_scale - sets scaling factor for auto_t
@@ -741,8 +737,14 @@ def SI_IR(si_code):
 # switch required relay ON
 def R_ON(RD, DEVICE_ADDRESS, DEVICE_REG_MODE1, DEVICE_REG_DATA):
    if use_RPiGPIO:
-      RE = [N_OP, S_OP, E_OP, W_OP][RD]
-      GPIO.output(RE, GPIO.HIGH)
+      if RD == 0:
+          led_N_OP.on()
+      elif RD == 1:
+          led_S_OP.on()
+      elif RD == 2:
+          led_E_OP.on()
+      elif RD == 3:
+          led_W_OP.on()
    if use_Seeed:
       DEVICE_REG_DATA &= ~(0x1<<RD)
       bus.write_byte_data(DEVICE_ADDRESS, DEVICE_REG_MODE1, DEVICE_REG_DATA)
@@ -757,8 +759,14 @@ def R_ON(RD, DEVICE_ADDRESS, DEVICE_REG_MODE1, DEVICE_REG_DATA):
 # switch required relay OFF
 def R_OFF(RD, DEVICE_ADDRESS, DEVICE_REG_MODE1, DEVICE_REG_DATA):
    if use_RPiGPIO:
-      RE = [N_OP, S_OP, E_OP, W_OP][RD]
-      GPIO.output(RE, GPIO.LOW)
+      if RD == 0:
+          led_N_OP.off()
+      elif RD == 1:
+          led_S_OP.off()
+      elif RD == 2:
+          led_E_OP.off()
+      elif RD == 3:
+          led_W_OP.off()
    if use_Seeed:
       DEVICE_REG_DATA |= (0x1<<RD)
       bus.write_byte_data(DEVICE_ADDRESS, DEVICE_REG_MODE1, DEVICE_REG_DATA)
@@ -1515,12 +1523,14 @@ while True:
       if photo:
          ptime3 = int(ptime2 - t3) + 1
          if pmlock == 1 and pmlock2 == 1 and ptime3 == pwait - 3 and not camera:
-            GPIO.output(C_OP, GPIO.HIGH)
+            led_C_OP.on()
+            #GPIO.output(C_OP, GPIO.HIGH)
             po = 1
             pmlock2 = 0
             pmlock3 = 1
          if pmlock == 1 and pmlock3 == 1 and ptime3 == pwait - 4 and not camera:
-            GPIO.output(C_OP, GPIO.LOW)
+            led_C_OP.off()
+            #GPIO.output(C_OP, GPIO.LOW)
             po = 0
             pmlock3 = 0
          if ptime3 != ptime4:
@@ -1540,8 +1550,10 @@ while True:
             keys(0,"",                        fs, photo, b2x+ (bw/1.5),     bw, 4, b2y, bh, 2, 3, 1)
             keys(0,"",                        fs, photo, b2x+14,     bw, 5, b2y, bh, 2, 3, 1)
             if use_RPiGPIO or photoon:
-               GPIO.output(F_OP, GPIO.LOW)
-               GPIO.output(C_OP, GPIO.LOW)
+               led_F_OP.off()
+               led_C_OP.off()
+               #GPIO.output(F_OP, GPIO.LOW)
+               #GPIO.output(C_OP, GPIO.LOW)
                po = 0
                if use_sony_ir == 1:
                   SI_IR('E7')
@@ -1550,8 +1562,10 @@ while True:
          else:
             camera = 0
             ptime2 = time.time() + pwait
-            GPIO.output(F_OP, GPIO.LOW)
-            GPIO.output(C_OP, GPIO.LOW)
+            led_F_OP.off()
+            led_C_OP.off()
+            #GPIO.output(F_OP, GPIO.LOW)
+            #GPIO.output(C_OP, GPIO.LOW)
             po = 0
             if use_sony_ir == 1:
                SI_IR('E7')
@@ -1563,9 +1577,11 @@ while True:
          ptime2 = time.time() + ptime
          keys(1,str(pcount + 1 - pcount2),    fs, photo, b2x+ (bw/1.5),     bw, 4, b2y, bh, 2, 3, 1)
          if use_RPiGPIO or photoon:
-            GPIO.output(F_OP, GPIO.HIGH)
+            led_F_OP.on()
+            #GPIO.output(F_OP, GPIO.HIGH)
             time.sleep(.2)
-            GPIO.output(C_OP, GPIO.HIGH)
+            led_C_OP.on()
+            #GPIO.output(C_OP, GPIO.HIGH)
             po = 1
             if use_sony_ir == 1:
                SI_IR('E6')
@@ -1677,12 +1693,14 @@ while True:
          ptime3 = int(ptime2 - t3) + 1
          # use if camera has mirror lockup (tested on CANON only)
          if pmlock == 1 and pmlock2 == 1 and ptime3 == pwait - 3 and not camera:
-            GPIO.output(C_OP, GPIO.HIGH)
+            led_C_OP.on()
+            #GPIO.output(C_OP, GPIO.HIGH)
             po = 1
             pmlock2 = 0
             pmlock3 = 1
          if pmlock == 1 and pmlock3 == 1 and ptime3 == pwait - 4 and not camera:
-            GPIO.output(C_OP, GPIO.LOW)
+            led_C_OP.off()
+            #GPIO.output(C_OP, GPIO.LOW)
             po = 0
             pmlock3 = 0
          if ptime3 != ptime4:
@@ -1704,8 +1722,10 @@ while True:
                keys(0,"",                     fs, photo, b2x+ (bw/1.5),     bw, 4, b2y, bh, 2, 3, 1)
                keys(0,"",                     fs, photo, b2x+14,     bw, 5, b2y, bh, 2, 3, 1)
                if use_RPiGPIO or photoon:
-                  GPIO.output(F_OP, GPIO.LOW)
-                  GPIO.output(C_OP, GPIO.LOW)
+                  led_F_OP.off()
+                  led_C_OP.off()
+                  #GPIO.output(F_OP, GPIO.LOW)
+                  #GPIO.output(C_OP, GPIO.LOW)
                   po = 0
                   if use_sony_ir == 1:
                       SI_IR('E7')
@@ -1715,8 +1735,10 @@ while True:
                camera = 0
                pmlock2 = 1
                ptime2 = time.time() + pwait
-               GPIO.output(F_OP, GPIO.LOW)
-               GPIO.output(C_OP, GPIO.LOW)
+               led_F_OP.off()
+               led_C_OP.off()
+               #GPIO.output(F_OP, GPIO.LOW)
+               #GPIO.output(C_OP, GPIO.LOW)
                po = 0
                if use_sony_ir == 1:
                    SI_IR('E7')
@@ -1728,9 +1750,11 @@ while True:
             ptime2 = time.time() + ptime
             keys(1,str(pcount + 1 - pcount2), fs, photo, b2x+ (bw/1.5),     bw, 4, b2y, bh, 2, 3, 1)
             if use_RPiGPIO or photoon:
-               GPIO.output(F_OP, GPIO.HIGH)
+               led_F_OP.on()
+               #GPIO.output(F_OP, GPIO.HIGH)
                time.sleep(.2)
-               GPIO.output(C_OP, GPIO.HIGH)
+               led_C_OP.on()
+               #GPIO.output(C_OP, GPIO.HIGH)
                po = 1
                if use_sony_ir == 1:
                    SI_IR('E6')
@@ -4581,8 +4605,10 @@ while True:
                 keys(0,"",  fs, photo, b2x+ (bw/1.5), bw, 4, b2y, bh, 2, 3, 1)
                 keys(0,"",  fs, photo, b2x+14, bw, 5, b2y, bh, 2, 3, 1)
                 if use_RPiGPIO or photoon:
-                   GPIO.output(F_OP, GPIO.LOW)
-                   GPIO.output(C_OP, GPIO.LOW)
+                   led_F_OP.off()
+                   led_C_OP.off()
+                   #GPIO.output(F_OP, GPIO.LOW)
+                   #GPIO.output(C_OP, GPIO.LOW)
                    po = 0
                    if use_sony_ir == 1:
                        SI_IR('E7')
@@ -4596,16 +4622,21 @@ while True:
                 camera = 1
                 if use_RPiGPIO or photoon:
                    if pmlock == 1:
-                      GPIO.output(C_OP, GPIO.HIGH)
+                      led_C_OP.on()
+                      #GPIO.output(C_OP, GPIO.HIGH)
                       po = 1
                       time.sleep(0.5)
-                      GPIO.output(F_OP, GPIO.LOW)
-                      GPIO.output(C_OP, GPIO.LOW)
+                      led_F_OP.off()
+                      led_C_OP.off()
+                      #GPIO.output(F_OP, GPIO.LOW)
+                      #GPIO.output(C_OP, GPIO.LOW)
                       po = 0
                       time.sleep(0.5)
-                   GPIO.output(F_OP, GPIO.HIGH)
+                   led_F_OP.on()
+                   #GPIO.output(F_OP, GPIO.HIGH)
                    time.sleep(.2)
-                   GPIO.output(C_OP, GPIO.HIGH)
+                   led_C_OP.on()
+                   #GPIO.output(C_OP, GPIO.HIGH)
                    po = 1
                    if use_sony_ir == 1:
                        SI_IR('E6')
@@ -4928,7 +4959,7 @@ while True:
           elif z == 55 or kz == K_z:
              if use_Pi_Cam and camera_connected:
                 os.killpg(p.pid, signal.SIGTERM)
-             if (not use_Pi_Cam and Webcam == 0and zoom < usb_max_res + 2) or (not use_Pi_Cam and Webcam == 1 and zoom < usb_max_res + 1) or (use_Pi_Cam and Pi_Cam == 3 and zoom < 9) or (use_Pi_Cam and Pi_Cam == 2 and zoom < 8) or (use_Pi_Cam and Pi_Cam == 1 and zoom < 7):
+             if (not use_Pi_Cam and Webcam == 0 and zoom < usb_max_res + 2) or (not use_Pi_Cam and Webcam == 1 and zoom < usb_max_res + 1) or (use_Pi_Cam and Pi_Cam == 3 and zoom < 9) or (use_Pi_Cam and Pi_Cam == 2 and zoom < 8) or (use_Pi_Cam and Pi_Cam == 1 and zoom < 7):
                 zoom += 1
                 if nr > 0:
                    mxq = []
