@@ -3,7 +3,9 @@
 To work with RaspiOS based on BULLSEYE or BOOKWORM, using libcamera (NOT raspistill/raspivid).
 At your own risk !!. Ensure you have any required software backed up.
 
-This script was developed using a Raspberry PI with libcamera to auto guide a telescope through a ST-4 port using a Raspberry Pi (Pi2B/Pi3B/Pi3B+/Pi4 recommended) and a suitable interface. For interface details etc see https://github.com/Gordon999/Pi-AutoGuider
+This script was developed using a Raspberry PI with libcamera to auto guide a telescope through a ST-4 port using a Raspberry Pi (Pi2B/Pi3B/Pi3B+/Pi4/Pi5 recommended) and a suitable interface. 
+
+For interface details etc see https://github.com/Gordon999/Pi-AutoGuider
 
 ## Screenshot
 
@@ -20,7 +22,7 @@ and... sudo apt install libsdl-gfx1.2-5 libsdl-image1.2 libsdl-kitchensink1 libs
 
 then... if using BOOKWORM switch to X11, sudo raspi-config, advanced, option A6 and choose X11, reboot.
 
-Download PiLCAG.py, copy to /home/pi and run it
+Download PiLCAG.py, copy to /home/USER and run it
 
 The interface can be an opto-isolator, relay card available for the Pi, eg Seeed Raspberry PI card, PiFace Relay Plus card, Sainsmart USB 4 relay card or any 4 relay card you interface.
 
