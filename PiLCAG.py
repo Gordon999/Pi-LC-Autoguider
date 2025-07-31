@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-"""Copyright (c) 2021
+"""Copyright (c) 2025
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
@@ -32,7 +32,7 @@ import signal
 from decimal import *
 getcontext().prec = 8
 
-#Pi-LC-AutoGuider v7.00
+#Pi-LC-AutoGuider v7.01
 
 #WORKS WITH PYTHON 3 
 
@@ -262,7 +262,7 @@ m_user = "/media/" + os.getlogin( )
 if use_Pi_Cam and camera_connected:
    if os.path.exists('test.jpg'):
       os.rename('test.jpg', 'oldtest.jpg')
-   rpistr = "libcamera-still -n -o test.jpg -t 100"
+   rpistr = "rpicam-still -n -o test.jpg -t 100"
    p = subprocess.Popen(rpistr, shell=True, preexec_fn=os.setsid)
    time.sleep(2)
    if os.path.exists('test.jpg'):
@@ -671,7 +671,7 @@ def start_picam():
     for f in files:
         os.remove(f)
     time.sleep(0.25)
-    rpistr = "libcamera-vid -t 0 --segment " + str(segment) + " --codec mjpeg -o /run/shm/test%d.jpg --contrast " + str(rpico/100) + " --brightness " + str(rpibr/100)
+    rpistr = "rpicam-vid -t 0 --segment " + str(segment) + " --codec mjpeg -o /run/shm/test%d.jpg --contrast " + str(rpico/100) + " --brightness " + str(rpibr/100)
     if rpiexno == 0:
         rpistr += " --shutter " + str(rpiss) + " --framerate " + str(1000000/rpiss)
     else:
@@ -4186,7 +4186,7 @@ while True:
              now = datetime.datetime.now()
              timestamp = now.strftime("%y%m%d%H%M%S")
              fname = h_user[0] + '/pic' + str(timestamp) + "_" + str(pcu) + '.jpg'
-             rpistr = "libcamera-still -o " + str(fname) + " --contrast " + str(rpico/100) + " --brightness " + str(rpibr/100)
+             rpistr = "rpicam-still -o " + str(fname) + " --contrast " + str(rpico/100) + " --brightness " + str(rpibr/100)
              if rpiex != 'off':
                 rpistr += " -t 800 --exposure " + rpiex
              else:
