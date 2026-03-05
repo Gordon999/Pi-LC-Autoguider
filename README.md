@@ -1,6 +1,6 @@
 # Pi-LC-Autoguider
 
-To work with RaspiOS based on BULLSEYE or BOOKWORM, using libcamera (NOT raspistill/raspivid).
+To work with RaspiOS based on TRIXIE, using libcamera (NOT raspistill/raspivid).
 At your own risk !!. Ensure you have any required software backed up.
 
 This script was developed using a Raspberry PI with libcamera to auto guide a telescope through a ST-4 port using a Raspberry Pi (Pi2B/Pi3B/Pi3B+/Pi4/Pi5 recommended) and a suitable interface. 
