@@ -32,7 +32,7 @@ import signal
 from decimal import *
 getcontext().prec = 8
 
-#Pi-LC-AutoGuider v7.01
+version = 7.02
 
 #WORKS WITH PYTHON 3 
 
@@ -290,7 +290,7 @@ if not use_Pi_Cam and camera_connected and Webcam == 1:
 #===================================================================================
 # Generate mask if required for Circular window
 #===================================================================================
-if Cwindow and not os.path.exists(h_user[0] + '/CMask.bmp'):
+if Cwindow and not os.path.exists(h_user + '/CMask.bmp'):
    pygame.init()
    bredColor =   pygame.Color(100,100,100)
    mwidth =200
@@ -662,7 +662,7 @@ if not Frame:
    windowSurfaceObj = pygame.display.set_mode((modewidth, Disp_Height + hplus), pygame.NOFRAME, bits)
 else:
    windowSurfaceObj = pygame.display.set_mode((modewidth, Disp_Height + hplus), 1,              bits)
-pygame.display.set_caption('Pi-LC-AutoGuider')
+pygame.display.set_caption('Pi-LC-AutoGuider ' + "v" + str(version))
 
 def start_picam():
     global segment,p,restart,rpiss,rpimodesa,rpiexno,rpico,rpigain,awbs,awb,rpiev,rpiredx,rpibluex,rpiexno,rpibr,width,height
@@ -1472,7 +1472,7 @@ while True:
             filno += 1
             now = datetime.datetime.now()
             timestamp = now.strftime("%y%m%d%H%M%S")
-            fname = h_user[0] + '/pic' + str(timestamp) + "_" + str(filno) + '.jpg'
+            fname = h_user + '/pic' + str(timestamp) + "_" + str(filno) + '.jpg'
             pygame.image.save(image, fname)
       except OSError:
          pass
@@ -1639,7 +1639,7 @@ while True:
                  filno += 1
                  now = datetime.datetime.now()
                  timestamp = now.strftime("%y%m%d%H%M%S")
-                 fname = h_user[0] + '/con' + str(timestamp)+ "_" + str(filno) + '.jpg'
+                 fname = h_user + '/con' + str(timestamp)+ "_" + str(filno) + '.jpg'
                  if os.path.exists(xpics[1]):
                      shutil.copy(xpics[1], fname)
              for tt in range(1,len(xpics)):
@@ -4162,7 +4162,7 @@ while True:
                 keys(0,"capture", fs, 1, b2x, bw, 5, b2y, bh, 5, 2, 1)
              now = datetime.datetime.now()
              timestamp = now.strftime("%y%m%d%H%M%S")
-             pygame.image.save(windowSurfaceObj, h_user[0] + '/scr' + str(timestamp) + "_"  + str(pct) + '.bmp')
+             pygame.image.save(windowSurfaceObj, h_user + '/scr' + str(timestamp) + "_"  + str(pct) + '.bmp')
              if menu == 0:
                 button(b2x, 6, b2y, 5, bw, 1, bh, 0,0)
                 keys(0,"Scr", fs, 6, b2x, bw, 5, b2y, bh, 5, 0, 1)
@@ -4185,7 +4185,7 @@ while True:
                 keys(0,"capture", fs, 1, b2x, bw, 4, b2y, bh, 5, 2, 1)
              now = datetime.datetime.now()
              timestamp = now.strftime("%y%m%d%H%M%S")
-             fname = h_user[0] + '/pic' + str(timestamp) + "_" + str(pcu) + '.jpg'
+             fname = h_user + '/pic' + str(timestamp) + "_" + str(pcu) + '.jpg'
              rpistr = "rpicam-still -o " + str(fname) + " --contrast " + str(rpico/100) + " --brightness " + str(rpibr/100)
              if rpiex != 'off':
                 rpistr += " -t 800 --exposure " + rpiex
