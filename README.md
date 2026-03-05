@@ -19,6 +19,22 @@ then...
 
 Download PiLCAG.py, copy to /home/USER and run it
 
+To run at boot if using labwc...
+
+(note: change XXXX to your username)
+
+sudo nano /home/XXXX/.config/labwc/autostart
+
+type in...
+
+/usr/bin/python3 /home/XXXX/MP3_Player.py
+
+press Ctrl and X, Y, return to save..
+
+Reboot
+
+===============================
+
 The interface can be an opto-isolator, relay card available for the Pi, eg Seeed Raspberry PI card, PiFace Relay Plus card, Sainsmart USB 4 relay card or any 4 relay card you interface.
 
 The relay cards can also be modified, different wiring to scope, to auto-guide other scopes eg Meade LX-10.
