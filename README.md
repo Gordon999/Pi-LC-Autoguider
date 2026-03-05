@@ -27,7 +27,7 @@ sudo nano /home/XXXX/.config/labwc/autostart
 
 type in...
 
-/usr/bin/python3 /home/XXXX/MP3_Player.py
+/usr/bin/python3 /home/XXXX/PiLCAG.py
 
 press Ctrl and X, Y, return to save..
 
